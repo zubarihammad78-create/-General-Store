@@ -1,0 +1,6 @@
+{
+  "name": "Imran General Store",
+  "description": "Online shopping portal for Imran General Store offering daily essentials, FMCG, groceries, personal care, and household items across Pakistan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
