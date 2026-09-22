@@ -35,6 +35,8 @@ interface StoreContextType {
   setCurrentMode: (mode: 'customer' | 'admin') => void;
   customerView: CustomerPageView;
   setCustomerView: (view: CustomerPageView) => void;
+  authRedirectView: CustomerPageView | null;
+  setAuthRedirectView: (view: CustomerPageView | null) => void;
   adminTab: AdminTabView;
   setAdminTab: (tab: AdminTabView) => void;
   selectedProductId: string | null;
@@ -93,6 +95,9 @@ interface StoreContextType {
   } | null;
   login: (email: string, name?: string) => void;
   logout: () => void;
+  isAdminLoggedIn: boolean;
+  adminLogin: (username: string, password: string) => boolean;
+  adminLogout: () => void;
   updateUserProfile: (profile: Partial<NonNullable<StoreContextType['user']>>) => void;
 
   // Admin Actions
@@ -123,6 +128,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Navigation
   const [currentMode, setCurrentMode] = useState<'customer' | 'admin'>('customer');
   const [customerView, setCustomerView] = useState<CustomerPageView>('home');
+  const [authRedirectView, setAuthRedirectView] = useState<CustomerPageView | null>(null);
   const [adminTab, setAdminTab] = useState<AdminTabView>('dashboard');
   const [selectedProductId, setSelectedProductId] = useState<string | null>('prod-1');
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>('ord-1001');
@@ -143,15 +149,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [settings, setSettings] = useState<StoreSettings>(initialStoreSettings);
 
   // Cart & Discounts
-  const [cart, setCart] = useState<CartItem[]>([
-    { product: initialProducts[0], quantity: 2 },
-    { product: initialProducts[3], quantity: 1 },
-  ]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [lastPlacedOrder, setLastPlacedOrder] = useState<Order | null>(null);
 
   // User Auth
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{
     name: string;
     email: string;
@@ -159,14 +162,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     address: string;
     city: string;
     area: string;
-  } | null>({
-    name: 'Muhammad Tariq Khan',
-    email: 'tariq.khan@gmail.com',
-    phone: '0300-9281744',
-    address: 'House 42-B, Street 14, Sector F-8/2',
-    city: 'Islamabad',
-    area: 'F-8 Markaz',
-  });
+  } | null>(null);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   // Toasts
   const [toasts, setToasts] = useState<ToastState[]>([]);
@@ -322,6 +319,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     setOrders((prev) => [newOrder, ...prev]);
+    void fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newOrder) });
     setLastPlacedOrder(newOrder);
     setSelectedOrderId(newOrder.id);
 
@@ -339,6 +337,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     clearCart();
     setCustomerView('order-success');
+    const whatsappPhone = settings.whatsapp.replace(/\D/g, '');
+    const whatsappMessage = `New order ${orderNum}%0A${newOrder.items.map((item) => `${item.productName} x${item.quantity}`).join('%0A')}%0ATotal: Rs. ${newOrder.total.toLocaleString()}%0ACustomer: ${newOrder.customer.name}%0APhone: ${newOrder.customer.phone}`;
+    if (typeof window !== 'undefined') {
+      window.open(`https://wa.me/${whatsappPhone}?text=${whatsappMessage}`, '_blank', 'noopener,noreferrer');
+    }
     showToast(`Order ${orderNum} placed successfully via Cash on Delivery!`, 'success');
     return newOrder;
   };
@@ -384,6 +387,18 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     showToast('You have been logged out', 'info');
   };
 
+  const adminLogin = (username: string, password: string) => {
+    const valid = username.trim().toLowerCase() === 'admin' && password === '123';
+    setIsAdminLoggedIn(valid);
+    showToast(valid ? 'Admin portal unlocked' : 'Invalid admin credentials', valid ? 'success' : 'error');
+    return valid;
+  };
+
+  const adminLogout = () => {
+    setIsAdminLoggedIn(false);
+    setCurrentMode('customer');
+  };
+
   const updateUserProfile = (profile: Partial<NonNullable<StoreContextType['user']>>) => {
     if (user) {
       setUser({ ...user, ...profile });
@@ -398,16 +413,19 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       id: `prod-${Date.now()}`,
     };
     setProducts((prev) => [newProd, ...prev]);
+    void fetch('/api/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newProd) });
     showToast(`Product "${newProd.name}" created successfully!`, 'success');
   };
 
   const updateProduct = (updated: Product) => {
     setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    void fetch(`/api/products/${updated.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated) });
     showToast(`Product "${updated.name}" updated!`, 'success');
   };
 
   const deleteProduct = (productId: string) => {
     setProducts((prev) => prev.filter((p) => p.id !== productId));
+    void fetch(`/api/products/${productId}`, { method: 'DELETE' });
     showToast('Product deleted', 'info');
   };
 
@@ -488,6 +506,8 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setCurrentMode,
         customerView,
         setCustomerView,
+        authRedirectView,
+        setAuthRedirectView,
         adminTab,
         setAdminTab,
         selectedProductId,
@@ -529,6 +549,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         user,
         login,
         logout,
+        isAdminLoggedIn,
+        adminLogin,
+        adminLogout,
         updateUserProfile,
         addProduct,
         updateProduct,

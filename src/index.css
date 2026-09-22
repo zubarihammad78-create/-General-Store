@@ -1,1 +1,89 @@
 @import "tailwindcss";
+
+@theme {
+	--font-sans: "Manrope", "Segoe UI", sans-serif;
+}
+
+:root {
+	--ink: #17212b;
+	--navy: #173042;
+	--navy-deep: #10232f;
+	--amber: #c88a2b;
+	--paper: #f4f1eb;
+}
+
+* {
+	letter-spacing: 0;
+}
+
+body {
+	background: var(--paper);
+	color: var(--ink);
+	overflow-x: hidden;
+}
+
+img,
+svg {
+	max-width: 100%;
+}
+
+button,
+a {
+	transition-duration: 220ms;
+}
+
+button:hover,
+a:hover {
+	transform: translateY(-1px);
+}
+
+/* Retheme the existing utility palette without changing the product UI copy. */
+[class~="bg-emerald-700"] { background-color: var(--navy) !important; }
+[class~="bg-emerald-800"] { background-color: var(--navy-deep) !important; }
+[class~="bg-emerald-900"] { background-color: #0d1d28 !important; }
+[class~="bg-emerald-950"] { background-color: #091720 !important; }
+[class~="text-emerald-700"],
+[class~="text-emerald-800"],
+[class~="text-emerald-900"] { color: var(--navy) !important; }
+[class~="text-emerald-200"],
+[class~="text-emerald-300"],
+[class~="text-emerald-50"] { color: #ead5aa !important; }
+[class~="border-emerald-700"],
+[class~="border-emerald-800"] { border-color: var(--navy) !important; }
+[class~="bg-emerald-50"] { background-color: #f8f2e7 !important; }
+[class~="bg-emerald-100"] { background-color: #f3e5c7 !important; }
+[class~="border-emerald-200"] { border-color: #e4c994 !important; }
+
+.storefront main > * {
+	animation: page-rise 520ms ease both;
+}
+
+.whatsapp-float {
+	animation: whatsapp-drift 3.4s ease-in-out infinite;
+}
+
+.whatsapp-float:hover {
+	animation-play-state: paused;
+}
+
+@keyframes page-rise {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes whatsapp-drift {
+	0%, 100% { transform: translateY(0) translateX(0); }
+	50% { transform: translateY(-7px) translateX(-4px); }
+}
+
+@media (max-width: 640px) {
+	.whatsapp-float {
+		right: 8px;
+		top: 42%;
+		width: 126px;
+		justify-content: center;
+		padding: 10px 12px;
+		border-radius: 8px;
+	}
+	.whatsapp-float span { display: inline; font-size: 10px; }
+}

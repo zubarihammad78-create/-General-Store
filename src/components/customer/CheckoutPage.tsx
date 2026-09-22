@@ -25,6 +25,8 @@ export const CheckoutPage: React.FC = () => {
     appliedCoupon,
     placeOrder,
     setCustomerView,
+    setAuthRedirectView,
+    isLoggedIn,
     user,
   } = useStore();
 
@@ -51,6 +53,20 @@ export const CheckoutPage: React.FC = () => {
         >
           Return to Shop
         </button>
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
+        <Lock className="w-10 h-10 text-emerald-700 mx-auto" />
+        <h2 className="text-xl font-bold text-gray-900">Login required to place an order</h2>
+        <p className="text-sm text-gray-500">Your cart is saved. Login or create an account to continue checkout.</p>
+        <div className="flex justify-center gap-3">
+          <button onClick={() => { setAuthRedirectView('checkout'); setCustomerView('login'); }} className="bg-emerald-700 text-white px-5 py-2.5 rounded text-xs font-bold">Login</button>
+          <button onClick={() => { setAuthRedirectView('checkout'); setCustomerView('register'); }} className="border border-gray-300 text-gray-800 px-5 py-2.5 rounded text-xs font-bold">Create account</button>
+        </div>
       </div>
     );
   }

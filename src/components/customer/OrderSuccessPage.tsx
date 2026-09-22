@@ -10,6 +10,7 @@ import {
   ShoppingBag,
   Printer,
   ShieldCheck,
+  MessageCircle,
 } from 'lucide-react';
 
 export const OrderSuccessPage: React.FC = () => {
@@ -19,9 +20,12 @@ export const OrderSuccessPage: React.FC = () => {
     setCustomerView,
     setSelectedOrderId,
     goToOrderTracking,
+    settings,
   } = useStore();
 
   const order = lastPlacedOrder || orders[0];
+  const whatsappPhone = settings.whatsapp.replace(/\D/g, '');
+  const whatsappMessage = `Order ${order?.orderNumber} confirmation: ${order?.items.map((item) => `${item.productName} x${item.quantity}`).join(', ')}. Total Rs. ${order?.total.toLocaleString()}`;
 
   if (!order) {
     return (
@@ -85,6 +89,15 @@ export const OrderSuccessPage: React.FC = () => {
             <ShoppingBag className="w-4 h-4" />
             Continue Shopping
           </button>
+          <a
+            href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(whatsappMessage)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full sm:w-auto bg-[#25D366] hover:bg-[#1ebe5d] text-white text-xs font-bold px-6 py-2.5 rounded-md flex items-center justify-center gap-2 transition-colors shadow-xs"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Send on WhatsApp
+          </a>
         </div>
       </div>
 

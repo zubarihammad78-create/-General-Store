@@ -25,7 +25,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const {
     adminTab,
     setAdminTab,
-    setCurrentMode,
+    adminLogout,
     orders,
     products,
     reviews,
@@ -67,7 +67,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setCurrentMode('customer')}
+              onClick={adminLogout}
               className="bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors border border-emerald-600"
             >
               <ExternalLink className="w-3.5 h-3.5" />

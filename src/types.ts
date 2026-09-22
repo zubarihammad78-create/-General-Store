@@ -32,6 +32,7 @@ export interface Category {
   description: string;
   productCount: number;
   isActive: boolean;
+  parentId?: string;
 }
 
 export interface CartItem {

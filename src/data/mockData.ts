@@ -2,6 +2,38 @@ import { Product, Category, Order, Customer, Coupon, ProductReview, StoreSetting
 
 export const initialCategories: Category[] = [
   {
+    id: 'cat-garments',
+    name: 'Garments',
+    slug: 'garments',
+    icon: 'Shirt',
+    image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=500&auto=format&fit=crop&q=80',
+    description: 'Everyday clothing and comfortable innerwear collections',
+    productCount: 0,
+    isActive: true,
+  },
+  {
+    id: 'cat-ladies-undergarments',
+    name: 'Ladies Undergarments',
+    slug: 'ladies-undergarments',
+    icon: 'Heart',
+    image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=500&auto=format&fit=crop&q=80',
+    description: 'Comfortable ladies undergarments and essentials',
+    productCount: 0,
+    isActive: true,
+    parentId: 'cat-garments',
+  },
+  {
+    id: 'cat-gents-undergarments',
+    name: 'Gents Undergarments',
+    slug: 'gents-undergarments',
+    icon: 'Shirt',
+    image: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=500&auto=format&fit=crop&q=80',
+    description: 'Comfortable gents undergarments and essentials',
+    productCount: 0,
+    isActive: true,
+    parentId: 'cat-garments',
+  },
+  {
     id: 'cat-personal-care',
     name: 'Personal Care',
     slug: 'personal-care',

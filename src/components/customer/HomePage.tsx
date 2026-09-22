@@ -146,7 +146,7 @@ export const HomePage: React.FC = () => {
             Center: Main Promo Banner (55-60% width)
             Right: Two Stacked Promo Cards
            ================================================== */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 items-stretch">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 items-stretch min-w-0">
           {/* LEFT: Category Sidebar (Desktop only) */}
           <div className="hidden lg:block lg:col-span-3 bg-white rounded-lg border border-gray-200 shadow-xs overflow-hidden flex flex-col justify-between">
             <div className="bg-gray-50/80 px-3.5 py-2.5 border-b border-gray-200">
@@ -187,7 +187,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* CENTER: Main Promotional Banner (55-60% width on desktop) */}
-          <div className="lg:col-span-6 bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 rounded-lg p-5 sm:p-7 text-white shadow-xs relative overflow-hidden flex flex-col justify-between min-h-[280px] sm:min-h-[340px]">
+          <div className="lg:col-span-6 min-w-0 bg-gradient-to-br from-emerald-800 via-emerald-700 to-teal-800 rounded-lg p-5 sm:p-7 text-white shadow-xs relative overflow-hidden flex flex-col justify-between min-h-[280px] sm:min-h-[340px]">
             {/* Background geometric accents */}
             <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-emerald-600/30 rounded-full blur-2xl pointer-events-none" />
             <div className="absolute top-0 right-0 w-48 h-48 bg-teal-500/20 rounded-full blur-xl pointer-events-none" />
@@ -207,7 +207,7 @@ export const HomePage: React.FC = () => {
                 Shop personal care, beauty, tea, household products and more with fast home delivery across Pakistan.
               </p>
 
-              <div className="pt-2 flex items-center gap-3">
+              <div className="pt-2 flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => {
                     setCategoryFilter('All');
@@ -243,7 +243,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* RIGHT: Two Stacked Promotional Cards (Desktop & Tablet) */}
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5 sm:gap-4">
+          <div className="lg:col-span-3 min-w-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5 sm:gap-4">
             {/* Card 1: Special Offers */}
             <div
               onClick={() => {

@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Package,
   HelpCircle,
-  LayoutDashboard,
   LogOut,
   Store,
   ChevronRight,
@@ -21,7 +20,6 @@ export const Header: React.FC = () => {
   const {
     customerView,
     setCustomerView,
-    currentMode,
     setCurrentMode,
     cartCount,
     subtotal,
@@ -97,18 +95,18 @@ export const Header: React.FC = () => {
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-40 shadow-xs">
       {/* 1. TOP BAR (Slim, clean, non-intrusive) */}
-      <div className="bg-gray-100 border-b border-gray-200 text-gray-600 text-[11px] py-1 px-3 sm:px-6">
+      <div className="bg-gray-100 border-b border-gray-200 text-[10px] sm:text-[11px] py-1 px-3 sm:px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Left announcements */}
           <div className="flex items-center gap-2 sm:gap-4 overflow-hidden whitespace-nowrap">
             <span className="flex items-center gap-1.5 text-gray-700 font-medium">
               <Truck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span>Free Delivery on orders over Rs. 2,000</span>
+              <span>Free delivery over Rs. 2,000</span>
             </span>
             <span className="text-gray-300 hidden sm:inline">|</span>
-            <span className="hidden md:flex items-center gap-1.5 text-gray-600">
+              <span className="hidden sm:flex items-center gap-1.5 text-gray-600">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span>Cash on Delivery Available Nationwide</span>
+              <span>COD nationwide</span>
             </span>
           </div>
 
@@ -119,7 +117,7 @@ export const Header: React.FC = () => {
               className="hover:text-emerald-700 transition-colors hidden sm:flex items-center gap-1"
             >
               <HelpCircle className="w-3 h-3 text-gray-400" />
-              <span>Help Center</span>
+              <span>Help</span>
             </button>
             <span className="text-gray-300 hidden sm:inline">|</span>
             <button
@@ -127,30 +125,20 @@ export const Header: React.FC = () => {
               className="hover:text-emerald-700 transition-colors flex items-center gap-1 text-emerald-800 font-semibold"
             >
               <Package className="w-3 h-3 text-emerald-700" />
-              <span>Track Order</span>
-            </button>
-            <span className="text-gray-300">|</span>
-            {/* Admin portal toggle */}
-            <button
-              onClick={() => setCurrentMode(currentMode === 'customer' ? 'admin' : 'customer')}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white px-2 py-0.5 rounded text-[10px] font-bold transition-colors flex items-center gap-1"
-              title="Store Owner Portal"
-            >
-              <LayoutDashboard className="w-2.5 h-2.5" />
-              <span>{currentMode === 'customer' ? 'Admin' : 'Storefront'}</span>
+              <span>Track</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* 2. MAIN HEADER */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3">
-        <div className="flex items-center justify-between gap-3 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-6 min-w-0">
           {/* Mobile Menu Icon */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-1.5 text-gray-700 hover:bg-gray-100 rounded-md"
-            aria-label="Open Mobile Menu"
+            aria-label={isMobileMenuOpen ? 'Close Mobile Menu' : 'Open Mobile Menu'}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -161,21 +149,21 @@ export const Header: React.FC = () => {
               setCustomerView('home');
               setSearchQuery('');
             }}
-            className="text-left flex items-center gap-2 sm:gap-2.5 group shrink-0"
+            className="text-left flex items-center gap-2 sm:gap-2.5 group min-w-0 flex-1"
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-md bg-emerald-700 text-white flex items-center justify-center font-bold text-lg shadow-xs group-hover:bg-emerald-800 transition-colors">
               <Store className="w-5 h-5" />
             </div>
-            <div>
-              <div className="flex items-baseline gap-1">
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-emerald-800">
+            <div className="min-w-0 overflow-hidden">
+              <div className="flex items-baseline gap-1 whitespace-nowrap overflow-hidden">
+                <span className="font-extrabold text-base sm:text-xl tracking-tight text-emerald-800 shrink-0">
                   IMRAN
                 </span>
-                <span className="font-bold text-base sm:text-lg tracking-normal text-gray-900">
+                <span className="font-bold text-sm sm:text-lg tracking-normal text-gray-900 truncate">
                   GENERAL STORE
                 </span>
               </div>
-              <p className="text-[9px] sm:text-[10px] text-gray-400 font-semibold tracking-wider uppercase -mt-1 hidden xs:block">
+              <p className="text-[9px] sm:text-[10px] text-gray-400 font-semibold tracking-wider uppercase -mt-1 hidden sm:block">
                 Online Shopping Pakistan
               </p>
             </div>
@@ -282,7 +270,7 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Right Action Icons: Login / Account, Orders, Cart */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-4 shrink-0">
             {/* 1. Account / Login */}
             <div ref={accountRef} className="relative">
               <button
@@ -374,6 +362,15 @@ export const Header: React.FC = () => {
                           Register
                         </button>
                       </p>
+                      <button
+                        onClick={() => {
+                          setCurrentMode('admin');
+                          setIsAccountDropdownOpen(false);
+                        }}
+                        className="w-full mt-3 pt-2 border-t border-gray-100 text-[11px] font-bold text-gray-500 hover:text-gray-900"
+                      >
+                        Admin Sign In
+                      </button>
                     </div>
                   )}
                 </div>
@@ -406,7 +403,7 @@ export const Header: React.FC = () => {
                   </span>
                 )}
               </div>
-              <div className="text-left leading-tight hidden xs:block">
+              <div className="text-left leading-tight hidden sm:block">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
                   Cart
                 </div>
@@ -419,7 +416,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Mobile Search Bar Row (Under logo on mobile) */}
-        <div className="mt-2.5 lg:hidden">
+        <div className="mt-2 lg:hidden">
           <form onSubmit={handleSearchSubmit} className="flex w-full">
             <input
               type="text"
@@ -548,7 +545,7 @@ export const Header: React.FC = () => {
       {/* Mobile Drawer Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-black/50 flex">
-          <div className="w-4/5 max-w-xs bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto">
+          <div className="w-[86%] max-w-sm bg-white h-full shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-left duration-300">
             <div className="p-4">
               <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-3">
                 <div className="flex items-center gap-2">
@@ -631,7 +628,7 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            {/* Bottom Admin & Track order in Drawer */}
+            {/* Bottom Track order in Drawer */}
             <div className="p-4 border-t border-gray-200 bg-gray-50 space-y-2 text-xs">
               <button
                 onClick={() => {
@@ -645,12 +642,12 @@ export const Header: React.FC = () => {
               </button>
               <button
                 onClick={() => {
-                  setCurrentMode(currentMode === 'customer' ? 'admin' : 'customer');
+                  setCurrentMode('admin');
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full py-2 bg-emerald-700 text-white rounded font-bold text-center"
+                className="w-full py-2 bg-gray-900 text-white rounded font-bold text-center"
               >
-                Switch to Admin Portal
+                Admin Sign In
               </button>
             </div>
           </div>

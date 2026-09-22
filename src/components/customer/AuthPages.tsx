@@ -7,7 +7,7 @@ interface AuthPageProps {
 }
 
 export const AuthPages: React.FC<AuthPageProps> = ({ initialMode = 'login' }) => {
-  const { setCustomerView, login, showToast } = useStore();
+  const { setCustomerView, login, showToast, authRedirectView, setAuthRedirectView } = useStore();
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
 
   // Login form states
@@ -23,17 +23,26 @@ export const AuthPages: React.FC<AuthPageProps> = ({ initialMode = 'login' }) =>
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginEmail.trim() || !loginPassword.trim()) {
       setError('Please enter your email and password');
       return;
     }
-    login(loginEmail, 'Muhammad Tariq Khan');
-    setCustomerView('account');
+    try {
+      const response = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: loginEmail, password: loginPassword }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Login failed');
+      login(data.email, data.name);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Login failed');
+      return;
+    }
+    setCustomerView(authRedirectView || 'account');
+    setAuthRedirectView(null);
   };
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (!regFullName.trim() || !regEmail.trim() || !regPhone.trim() || !regPassword.trim()) {
@@ -44,9 +53,18 @@ export const AuthPages: React.FC<AuthPageProps> = ({ initialMode = 'login' }) =>
       setError('Passwords do not match');
       return;
     }
-    login(regEmail, regFullName);
+    try {
+      const response = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: regFullName, email: regEmail, phone: regPhone, password: regPassword }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Account creation failed');
+      login(data.email, data.name);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Account creation failed');
+      return;
+    }
     showToast('Account created successfully! Welcome to Imran General Store.', 'success');
-    setCustomerView('account');
+    setCustomerView(authRedirectView || 'account');
+    setAuthRedirectView(null);
   };
 
   return (

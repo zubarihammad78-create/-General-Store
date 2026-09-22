@@ -6,6 +6,9 @@ import { Toast } from './components/common/Toast';
 import { QuickViewModal } from './components/common/QuickViewModal';
 import { CartDrawer } from './components/common/CartDrawer';
 import { MobileBottomNav } from './components/common/MobileBottomNav';
+import { WhatsAppButton } from './components/common/WhatsAppButton';
+import { Chatbot } from './components/common/Chatbot';
+import { AdminLogin } from './components/admin/AdminLogin';
 
 // Customer Pages
 import { HomePage } from './components/customer/HomePage';
@@ -34,7 +37,7 @@ import { AdminReviews } from './components/admin/AdminReviews';
 import { AdminSettings } from './components/admin/AdminSettings';
 
 const StoreContent: React.FC = () => {
-  const { customerView, currentMode, adminTab } = useStore();
+  const { customerView, currentMode, adminTab, isAdminLoggedIn } = useStore();
 
   // Scroll to top upon view change
   useEffect(() => {
@@ -43,6 +46,7 @@ const StoreContent: React.FC = () => {
 
   // If in Admin Mode, render the comprehensive administration back-office
   if (currentMode === 'admin') {
+    if (!isAdminLoggedIn) return <AdminLogin />;
     return (
       <AdminLayout>
         {adminTab === 'dashboard' && <AdminDashboard />}
@@ -60,12 +64,12 @@ const StoreContent: React.FC = () => {
 
   // Customer-Facing Storefront
   return (
-    <div className="min-h-screen bg-[#f5f5f5] flex flex-col antialiased text-gray-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="storefront min-h-screen bg-[#f4f1eb] flex flex-col antialiased text-gray-900 font-sans selection:bg-amber-100 selection:text-slate-900">
       {/* Top Header & Navigation */}
       <Header />
 
       {/* Main Screen Content */}
-      <main className="flex-1 pb-14 lg:pb-0">
+      <main className="flex-1 pb-20 lg:pb-0">
         {customerView === 'home' && <HomePage />}
         {customerView === 'shop' && <ShopPage />}
         {customerView === 'product-details' && <ProductDetailsPage />}
@@ -91,6 +95,8 @@ const StoreContent: React.FC = () => {
       <QuickViewModal />
       <CartDrawer />
       <Toast />
+      <WhatsAppButton />
+      <Chatbot />
     </div>
   );
 };
